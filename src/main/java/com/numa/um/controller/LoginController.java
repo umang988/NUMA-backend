@@ -41,7 +41,6 @@ public class LoginController {
     @PostMapping("/validate2fa-otp")
     public ResponseEntity<?> validate2faOtp(@RequestBody ValidateOtpRequest request) {
         return loginService.validate2faOtp(request.getEmail(), request.getOtp());
-
     }
 
     @PostMapping("/reset-password")

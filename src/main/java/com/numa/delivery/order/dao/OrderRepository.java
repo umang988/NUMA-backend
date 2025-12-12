@@ -1,11 +1,10 @@
-package com.numa.user.dao;
+package com.numa.delivery.order.dao;
 
-
-import com.numa.user.entity.UserRole;
+import com.numa.delivery.order.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRole, Long>, JpaSpecificationExecutor<UserRole> {
+public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 }
