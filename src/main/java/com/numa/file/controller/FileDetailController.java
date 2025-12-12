@@ -55,8 +55,8 @@ public class FileDetailController {
     }
 
     @DeleteMapping("/uploadedFiles/delete/{id}")
-    public ResponseEntity<String> deleteUploadedFile(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUploadedFile(@PathVariable Long id) {
             fileDetailService.deleteUploadedFile(id);
-            return ResponseEntity.ok("Deleted");
+            return ResponseEntity.noContent().build();
     }
 }
