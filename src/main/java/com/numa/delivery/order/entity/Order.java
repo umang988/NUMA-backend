@@ -64,11 +64,17 @@ public class Order extends AuditableEntity {
         }
 
         this.totalWeight = orderItems.stream()
-                .mapToDouble(item -> item.getProduct().getWeight() * item.getQuantity())
+                .mapToDouble(item -> {
+                    Double weight = item.getProduct().getWeight();
+                    return (weight != null ? weight : 0.0) * item.getQuantity();
+                })
                 .sum();
 
         this.totalVolume = orderItems.stream()
-                .mapToDouble(item -> item.getProduct().getVolume() * item.getQuantity())
+                .mapToDouble(item -> {
+                    Double volume = item.getProduct().getVolume();
+                    return (volume != null ? volume : 0.0) * item.getQuantity();
+                })
                 .sum();
     }
 }

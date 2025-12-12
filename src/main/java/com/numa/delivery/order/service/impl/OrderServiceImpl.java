@@ -2,8 +2,10 @@ package com.numa.delivery.order.service.impl;
 
 import com.numa.delivery.order.dao.OrderRepository;
 import com.numa.delivery.order.entity.Order;
+import com.numa.delivery.order.entity.OrderItem;
 import com.numa.delivery.order.service.OrderService;
 import com.numa.generic.GenericSpecification;
+import com.numa.master.product.dao.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private GenericSpecification genericSpecification;
+
+    @Autowired
+    ProductRepository productRepository;
 
 
 
@@ -32,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Order order) {
-        if (order.getOrderItems() != null) {order.getOrderItems().forEach(item -> item.setOrder(order));}
+        setOrderItems(order,order);
         return orderRepository.save(order);
     }
 
@@ -54,17 +59,31 @@ public class OrderServiceImpl implements OrderService {
         // ---------- UPDATE ORDER ITEMS ----------
         if (updatedOrder.getOrderItems() != null) {
             existing.getOrderItems().clear();
-            updatedOrder.getOrderItems().forEach(item -> {
-                item.setOrder(existing);
-                existing.getOrderItems().add(item);
-            });
+            setOrderItems(existing, updatedOrder);
         }
 
         return orderRepository.save(existing);
     }
 
     @Override
-    public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
+    public void deleteOrder(Long id) {orderRepository.deleteById(id);}
+
+
+    //Helper
+    private void setOrderItems(Order order, Order sourceOrder) {
+
+        if (sourceOrder.getOrderItems() == null || sourceOrder.getOrderItems().isEmpty()) return;
+
+        for (OrderItem item : sourceOrder.getOrderItems()) {
+
+            if (item.getProduct() == null || item.getProduct().getId() == null) {
+                throw new RuntimeException("Product ID is required in orderItems");
+            }
+
+            item.setProduct(genericSpecification.getEntityById(item.getProduct().getId(), productRepository, "Product"));
+
+            item.setOrder(order);
+            order.getOrderItems().add(item);
+        }
     }
 }
