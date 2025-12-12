@@ -41,7 +41,7 @@ public class Vehicle extends AuditableEntity {
 
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_driver_id")
     private User assignedDriver;
 
